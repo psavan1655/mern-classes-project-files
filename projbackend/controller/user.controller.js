@@ -1,46 +1,48 @@
+require("dotenv").config();
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
 exports.signup = async (req, res) => {
   try {
-    User.findOne({ email: req.body.email }, (err, email) => {
-      if (email) {
+    const { email, password } = req.body;
+    await User.findOne({ email }).then(async (data) => {
+      if (data) {
         return res.status(400).json({
           success: false,
-          err: "Email already exist",
+          error: "Email already exist",
         });
       }
-    });
 
-    if (
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
-        req.body.password
-      )
-    ) {
-      return res.status(400).json({
-        success: false,
-        err: "Password should be atleast Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character",
-      });
-    }
-
-    const userSubmitData = new User(req.body);
-
-    const user = await userSubmitData
-      .save()
-      .then((data) => {
-        return res.status(200).json({
-          success: true,
-          msg: "User successfully created",
-          data: data,
-        });
-      })
-      .catch(() => {
+      if (
+        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+          password
+        )
+      ) {
         return res.status(400).json({
           success: false,
-          msg: "User not created",
+          error:
+            "Password should be atleast Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character",
         });
-      });
+      }
+      const userSubmitData = new User(req.body);
+
+      const user = await userSubmitData
+        .save()
+        .then((data) => {
+          if (data) {
+            return res.status(200).json({
+              success: true,
+              msg: "User successfully created",
+              data,
+            });
+          }
+        })
+        .catch((error) => {
+          console.log("in => ", error);
+        });
+    });
   } catch (err) {
+    console.log("out => ", err);
     return res.status(400).json({
       success: false,
       msg: "User not created",
@@ -65,7 +67,7 @@ exports.signin = (req, res) => {
     }
 
     // Create token
-    const token = jwt.sign({ _id: user._id }, "demo@123");
+    const token = jwt.sign({ _id: user._id }, process.env.SECRET);
     res.cookie("token", token, { maxAge: 360000 });
 
     const { _id, firstname, email } = user;
@@ -92,6 +94,13 @@ exports.getUser = (req, res) => {
     const { _id } = req.body;
     User.findOne({ _id }, (err, user) => {
       if (err) {
+        return res.status(400).json({
+          success: false,
+          err: "No user found...",
+        });
+      }
+
+      if (!user) {
         return res.status(400).json({
           success: false,
           err: "No user found...",
@@ -167,4 +176,32 @@ exports.updateUser = async (req, res) => {
       }
     );
   });
+};
+
+exports.validateToken = async (req, res, next) => {
+  try {
+    if (!req.headers.cookie) {
+      return res.status(400).json({
+        success: false,
+        msg: "User must be Logged In!",
+      });
+    }
+    const token = req.headers.cookie.substring(6);
+    jwt.verify(token, process.env.SECRET),
+      (err, verified) => {
+        if (err) {
+          return res.status(400).json({
+            success: false,
+            msg: "ACCESS DENIED",
+          });
+        }
+      };
+    next();
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: false,
+      msg: "Token validation failed",
+    });
+  }
 };

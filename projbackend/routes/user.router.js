@@ -6,6 +6,7 @@ const {
   getUser,
   getAllUser,
   updateUser,
+  validateToken,
 } = require("../controller/user.controller");
 const router = express.Router();
 
@@ -13,7 +14,7 @@ const router = express.Router();
 router.post("/signup", signup);
 router.post("/signin", signin);
 router.get("/signout", signout);
-router.post("/getuser", getUser);
+router.post("/getuser", validateToken, getUser);
 router.get("/getalluser", getAllUser);
 router.put("/updateuser", updateUser);
 
