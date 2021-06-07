@@ -37,12 +37,9 @@ exports.signup = async (req, res) => {
             });
           }
         })
-        .catch((error) => {
-          console.log("in => ", error);
-        });
+        .catch((error) => {});
     });
   } catch (err) {
-    console.log("out => ", err);
     return res.status(400).json({
       success: false,
       msg: "User not created",
@@ -178,6 +175,35 @@ exports.updateUser = async (req, res) => {
   });
 };
 
+exports.deleteUser = async (req, res) => {
+  try {
+    const { _id } = req.body;
+    await User.findOneAndDelete({ _id }).then((user, err) => {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          error: "User not deleted",
+        });
+      }
+      if (!user) {
+        return res.status(400).json({
+          success: false,
+          error: "No user found for this id.",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        msg: "User deleted successfully!",
+      });
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      error: "User not deleted",
+    });
+  }
+};
+
 exports.validateToken = async (req, res, next) => {
   try {
     if (!req.headers.cookie) {
@@ -186,6 +212,7 @@ exports.validateToken = async (req, res, next) => {
         msg: "User must be Logged In!",
       });
     }
+
     const token = req.headers.cookie.substring(6);
     jwt.verify(token, process.env.SECRET),
       (err, verified) => {

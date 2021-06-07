@@ -27,6 +27,7 @@ app.use(cors());
 app.use(cookieParser());
 app.use(compression());
 app.use(bodyParser.json());
+app.use("/api/uploads", express.static("uploads"));
 
 app.use("/api", routes);
 
