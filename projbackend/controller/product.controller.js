@@ -1,7 +1,6 @@
 const multer = require("multer");
 const fs = require("fs");
 const Product = require("../models/Product");
-const { nextTick } = require("process");
 
 // Multer configuration
 const storage = multer.diskStorage({

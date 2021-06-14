@@ -15,6 +15,7 @@ const Signup = () => {
   const { firstname, lastname, email, password, loading, error } = data;
 
   const handleChange = (name) => (e) => {
+    console.log(e.target.value);
     setData({
       ...data,
       [name]: e.target.value,
@@ -33,7 +34,7 @@ const Signup = () => {
     <div className="container-fluid p-5 w-50 mt-5">
       {loading ? (
         <Loader
-          type="Puff"
+          type="BallTriangle"
           color="#00BFFF"
           height={100}
           width={100}
@@ -41,7 +42,7 @@ const Signup = () => {
         />
       ) : (
         <React.Fragment>
-          <div className="text-center pb-4">
+          <div className="text-center pb-4 mb-5">
             <h1>Sign Up</h1>
           </div>
           {error ? (
@@ -103,8 +104,8 @@ const Signup = () => {
             </div>
             <div>
               Already have an account?
-              <Link className="navbar-brand" to="/signup">
-                Create One
+              <Link className="navbar-brand" to="/signin">
+                Log In
               </Link>{" "}
             </div>
             <div className="col-12 ">
