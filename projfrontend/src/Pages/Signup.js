@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Loader from "react-loader-spinner";
+import axios from "axios";
 
 const Signup = () => {
   const [data, setData] = useState({
@@ -15,7 +16,6 @@ const Signup = () => {
   const { firstname, lastname, email, password, loading, error } = data;
 
   const handleChange = (name) => (e) => {
-    console.log(e.target.value);
     setData({
       ...data,
       [name]: e.target.value,
@@ -24,9 +24,24 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     setData({ loading: true });
     if (!firstname || !lastname || !email || !password) {
       setData({ error: true });
+    } else {
+      axios({
+        url: "http://localhost:8000/api/user/signup",
+        method: "post",
+
+        data: data,
+      })
+        .then((res) => {
+          setData({ loading: false, error: false });
+        })
+        .catch((err) => {
+          setData({ loading: false, error: false });
+          console.log(err);
+        });
     }
   };
 
