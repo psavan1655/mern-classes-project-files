@@ -101,26 +101,50 @@ exports.createProduct = async (req, res) => {
 exports.getProduct = (req, res) => {
   try {
     const { _id } = req.body;
-    Product.findOne({ _id }, (err, product) => {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          err: "No product found...",
-        });
-      }
 
-      if (!product) {
-        return res.status(400).json({
-          success: false,
-          err: "No product found...",
-        });
-      }
+    Product.findOne({ _id })
+      .populate("category")
+      .exec((err, product) => {
+        if (err) {
+          return res.status(400).json({
+            success: false,
+            err: "No product found...",
+          });
+        }
 
-      return res.status(200).json({
-        success: true,
-        data: product,
+        if (!product) {
+          return res.status(400).json({
+            success: false,
+            err: "No product found...",
+          });
+        }
+
+        return res.status(200).json({
+          success: true,
+          data: product,
+        });
       });
-    });
+
+    // Product.findOne({ _id }, (err, product) => {
+    //   if (err) {
+    //     return res.status(400).json({
+    //       success: false,
+    //       err: "No product found...",
+    //     });
+    //   }
+
+    //   if (!product) {
+    //     return res.status(400).json({
+    //       success: false,
+    //       err: "No product found...",
+    //     });
+    //   }
+
+    //   return res.status(200).json({
+    //     success: true,
+    //     data: product,
+    //   });
+    // });
   } catch (error) {
     return res.status(400).json({
       success: false,

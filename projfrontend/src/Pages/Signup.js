@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import axios from "axios";
 
@@ -22,14 +22,14 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setData({ loading: true });
     if (!firstname || !lastname || !email || !password) {
       setData({ error: true });
     } else {
-      axios({
+      await axios({
         url: "http://localhost:8000/api/user/signup",
         method: "post",
 
@@ -37,16 +37,17 @@ const Signup = () => {
       })
         .then((res) => {
           setData({ loading: false, error: false });
+          return <Redirect to="/signin" />;
         })
         .catch((err) => {
-          setData({ loading: false, error: false });
+          setData({ loading: false, error: true });
           console.log(err);
         });
     }
   };
 
   return (
-    <div className="container-fluid p-5 w-50 mt-5">
+    <div className="container-fluid p-5 w-75 mt-5">
       {loading ? (
         <Loader
           type="BallTriangle"
@@ -57,7 +58,7 @@ const Signup = () => {
         />
       ) : (
         <React.Fragment>
-          <div className="text-center pb-4 mb-5">
+          <div className="text-center mb-5">
             <h1>Sign Up</h1>
           </div>
           {error ? (

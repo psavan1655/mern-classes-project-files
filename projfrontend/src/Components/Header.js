@@ -1,4 +1,7 @@
+import React from "react";
 import { Link, withRouter } from "react-router-dom";
+import Signout from "../helper/Signout";
+import isAuthenticated from "../helper/isAuthenticated";
 
 const currentTab = (history, path) => {
   if (history.location.pathname === path) {
@@ -38,24 +41,45 @@ const Header = ({ history }) => {
                 Home
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                style={currentTab(history, "/signup")}
-                className="nav-link"
-                to="/signup"
-              >
-                Signup
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                style={currentTab(history, "/signin")}
-                className="nav-link"
-                to="/signin"
-              >
-                Signin
-              </Link>
-            </li>
+            {!isAuthenticated() && (
+              <React.Fragment>
+                <li className="nav-item">
+                  <Link
+                    style={currentTab(history, "/signup")}
+                    className="nav-link"
+                    to="/signup"
+                  >
+                    Signup
+                  </Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link
+                    style={currentTab(history, "/signin")}
+                    className="nav-link"
+                    to="/signin"
+                  >
+                    Signin
+                  </Link>
+                </li>
+              </React.Fragment>
+            )}
+
+            {isAuthenticated() && (
+              <li className="nav-item">
+                <div
+                  style={currentTab(history, "/signout")}
+                  onClick={() => {
+                    Signout(() => {
+                      history.push("/");
+                    });
+                  }}
+                  className="nav-link"
+                >
+                  SignOut
+                </div>
+              </li>
+            )}
           </ul>
         </div>
       </div>
