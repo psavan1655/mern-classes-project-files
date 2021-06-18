@@ -49,33 +49,46 @@ exports.signup = async (req, res) => {
 
 exports.signin = (req, res) => {
   const { email, password } = req.body;
-  User.findOne({ email }, (err, user) => {
-    if (err) {
+  User.findOne({ email })
+    .then((err, user) => {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          err: "No email found...",
+        });
+      }
+      if (!user) {
+        return res.status(400).json({
+          success: false,
+          err: "No user found...",
+        });
+      }
+      if (!user.authenticate(password)) {
+        return res.status(400).json({
+          success: false,
+          err: "Password does not match!",
+        });
+      }
+
+      // Create token
+      const token = jwt.sign({ _id: user._id }, process.env.SECRET);
+      res.cookie("token", token, { maxAge: 360000 });
+
+      const { _id, firstname, email } = user;
+      return res.json({
+        token: token,
+        _id: _id,
+        name: firstname,
+        email: email,
+        message: "User successfully logged In!",
+      });
+    })
+    .catch((err) => {
       return res.status(400).json({
         success: false,
-        err: "No email found...",
+        err: "User sign in failed...",
       });
-    }
-    if (!user.authenticate(password)) {
-      return res.status(400).json({
-        success: false,
-        err: "Password does not match!",
-      });
-    }
-
-    // Create token
-    const token = jwt.sign({ _id: user._id }, process.env.SECRET);
-    res.cookie("token", token, { maxAge: 360000 });
-
-    const { _id, firstname, email } = user;
-    return res.json({
-      token: token,
-      _id: _id,
-      name: firstname,
-      email: email,
-      message: "User successfully logged In!",
     });
-  });
 };
 
 exports.signout = (req, res) => {

@@ -7,11 +7,13 @@ const Signin = () => {
   const [data, setData] = useState({
     email: "",
     password: "",
+    errormessage: "",
     loading: false,
+    redirect: false,
     error: false,
   });
 
-  const { email, password, loading, error } = data;
+  const { email, password, errormessage, loading, redirect, error } = data;
 
   const handleChange = (name) => (e) => {
     setData({
@@ -25,7 +27,7 @@ const Signin = () => {
 
     setData({ loading: true });
     if (!email || !password) {
-      setData({ error: true });
+      setData({ error: true, errormessage: "Please enter all details..." });
     } else {
       await axios({
         url: "http://localhost:8000/api/user/signin",
@@ -38,12 +40,14 @@ const Signin = () => {
           if (window !== undefined) {
             window.localStorage.setItem("jwt", res.data.token);
           }
-          setData({ loading: false, error: false });
-          return <Redirect to="/" />;
+          setData({ loading: false, error: false, redirect: true });
         })
-        .catch((err) => {
-          setData({ loading: false, error: true });
-          console.log(err);
+        .catch((error) => {
+          setData({
+            loading: false,
+            error: true,
+            errormessage: error.response.data.err,
+          });
         });
     }
   };
@@ -65,7 +69,7 @@ const Signin = () => {
           </div>
           {error ? (
             <div class="alert alert-danger" role="alert">
-              Please enter all details...
+              {errormessage}
             </div>
           ) : (
             ""
@@ -110,6 +114,7 @@ const Signin = () => {
           </form>
         </React.Fragment>
       )}
+      {redirect ? <Redirect to="/" /> : ""}
     </div>
   );
 };

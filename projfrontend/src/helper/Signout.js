@@ -5,8 +5,9 @@ const Signout = (next) => {
     localStorage.removeItem("jwt");
     next();
 
-    return axios(`http://localhost:8000/api/user/signout`, {
-      method: "GET",
+    return axios({
+      url: `http://localhost:8000/api/user/signout`,
+      method: "get",
     })
       .then((response) => console.log("Signout Successfull"))
       .catch((err) => console.log(err));

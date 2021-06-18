@@ -9,11 +9,13 @@ const Signup = () => {
     lastname: "",
     email: "",
     password: "",
+    errormessage: "",
     loading: false,
     error: false,
   });
 
-  const { firstname, lastname, email, password, loading, error } = data;
+  const { firstname, lastname, email, password, errormessage, loading, error } =
+    data;
 
   const handleChange = (name) => (e) => {
     setData({
@@ -27,7 +29,7 @@ const Signup = () => {
 
     setData({ loading: true });
     if (!firstname || !lastname || !email || !password) {
-      setData({ error: true });
+      setData({ error: true, errormessage: "Please enter all details" });
     } else {
       await axios({
         url: "http://localhost:8000/api/user/signup",
@@ -39,9 +41,12 @@ const Signup = () => {
           setData({ loading: false, error: false });
           return <Redirect to="/signin" />;
         })
-        .catch((err) => {
-          setData({ loading: false, error: true });
-          console.log(err);
+        .catch((error) => {
+          setData({
+            loading: false,
+            error: true,
+            errormessage: error.response.data.error,
+          });
         });
     }
   };
@@ -63,7 +68,7 @@ const Signup = () => {
           </div>
           {error ? (
             <div class="alert alert-danger" role="alert">
-              Please enter all details...
+              {errormessage}
             </div>
           ) : (
             ""
