@@ -30,7 +30,7 @@ const Signin = () => {
       setData({ error: true, errormessage: "Please enter all details..." });
     } else {
       await axios({
-        url: "http://localhost:8000/api/user/signin",
+        url: `${process.env.REACT_APP_API_URL}/api/user/signin`,
         method: "post",
 
         data: data,
@@ -38,7 +38,7 @@ const Signin = () => {
         .then((res) => {
           console.log(res);
           if (window !== undefined) {
-            window.localStorage.setItem("jwt", res.data.token);
+            window.localStorage.setItem("jwt", JSON.stringify(res.data));
           }
           setData({ loading: false, error: false, redirect: true });
         })

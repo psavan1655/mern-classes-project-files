@@ -36,11 +36,35 @@ const Header = ({ history }) => {
               <Link
                 style={currentTab(history, "/user")}
                 className="nav-link"
-                to="/user"
+                to="/"
               >
                 Home
               </Link>
             </li>
+
+            {isAuthenticated() && isAuthenticated().role === 0 && (
+              <li className="nav-item">
+                <Link
+                  style={currentTab(history, "/signup")}
+                  className="nav-link"
+                  to="/user"
+                >
+                  User Dashboard
+                </Link>
+              </li>
+            )}
+            {isAuthenticated() && isAuthenticated().role === 1 && (
+              <li className="nav-item">
+                <Link
+                  style={currentTab(history, "/signup")}
+                  className="nav-link"
+                  to="/admin/dashboard"
+                >
+                  Admin Dashboard
+                </Link>
+              </li>
+            )}
+
             {!isAuthenticated() && (
               <React.Fragment>
                 <li className="nav-item">

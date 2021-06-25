@@ -50,7 +50,7 @@ exports.signup = async (req, res) => {
 exports.signin = (req, res) => {
   const { email, password } = req.body;
   User.findOne({ email })
-    .then((err, user) => {
+    .then((user, err) => {
       if (err) {
         return res.status(400).json({
           success: false,
@@ -74,12 +74,13 @@ exports.signin = (req, res) => {
       const token = jwt.sign({ _id: user._id }, process.env.SECRET);
       res.cookie("token", token, { maxAge: 360000 });
 
-      const { _id, firstname, email } = user;
+      const { _id, firstname, email, role } = user;
       return res.json({
         token: token,
         _id: _id,
         name: firstname,
         email: email,
+        role: role,
         message: "User successfully logged In!",
       });
     })

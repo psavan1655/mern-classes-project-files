@@ -32,7 +32,7 @@ const Signup = () => {
       setData({ error: true, errormessage: "Please enter all details" });
     } else {
       await axios({
-        url: "http://localhost:8000/api/user/signup",
+        url: `${process.env.REACT_APP_API_URL}/api/user/signup`,
         method: "post",
 
         data: data,

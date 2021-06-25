@@ -1,8 +1,6 @@
-import React from "react";
-
 const isAuthenticated = () => {
   if (window.localStorage.jwt) {
-    return true;
+    return JSON.parse(window.localStorage.getItem("jwt"));
   } else {
     return false;
   }

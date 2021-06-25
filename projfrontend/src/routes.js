@@ -9,17 +9,31 @@ import Signup from "./Pages/Signup";
 import Signin from "./Pages/Signin";
 import Footer from "./Components/Footer";
 import "./routes.css";
+import AdminDashboard from "./Pages/AdminDashboard";
+import PrivateRoutes from "./helper/PrivateRoutes";
+import UserDashboard from "./Pages/UserDashboard";
+import AdminRoutes from "./helper/AdminRoutes";
 
 const Routes = () => {
   return (
     <BrowserRouter>
       <Header />
+
       <div className="bodyWrapper">
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/signup" exact component={Signup} />
           <Route path="/signin" exact component={Signin} />
-          {/* <PrivateRoute path="/user" exact component={Demo} /> */}
+          <PrivateRoutes
+            path="/user/dashboard"
+            exact
+            component={UserDashboard}
+          />
+          <AdminRoutes
+            path="/admin/dashboard"
+            exact
+            component={AdminDashboard}
+          />
         </Switch>
       </div>
 

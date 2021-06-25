@@ -6,7 +6,7 @@ const Signout = (next) => {
     next();
 
     return axios({
-      url: `http://localhost:8000/api/user/signout`,
+      url: `${process.env.REACT_APP_API_URL}/api/user/signout`,
       method: "get",
     })
       .then((response) => console.log("Signout Successfull"))

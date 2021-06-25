@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 function Footer() {
   return (
-    // <div className="container-fluid fixed-bottom">
     <footer className="footer bg-dark  py-3 fixed-bottom">
       <div className="row">
         <div className="col-6">
@@ -22,20 +21,12 @@ function Footer() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link
-                //   style={currentTab(history, "/signup")}
-                className="nav-link"
-                to="/"
-              >
+              <Link className="nav-link" to="/">
                 Instagram
               </Link>
             </li>
             <li className="nav-item">
-              <Link
-                //   style={currentTab(history, "/signin")}
-                className="nav-link"
-                to="/"
-              >
+              <Link className="nav-link" to="/">
                 Twitter
               </Link>
             </li>
