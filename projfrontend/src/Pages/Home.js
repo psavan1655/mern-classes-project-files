@@ -35,11 +35,7 @@ function Home() {
             let imgPath = `${process.env.REACT_APP_API_URL}/${data.photo}`;
             return (
               <div className="card mb-5" style={{ width: "18rem" }}>
-                <img
-                  className="card-img-top"
-                  src={imgPath}
-                  alt="Card image cap"
-                />
+                <img className="card-img-top" src={imgPath} />
                 <div className="card-body">
                   <h5 className="card-title">{data.name}</h5>
                   <p className="card-text">{data.description}</p>

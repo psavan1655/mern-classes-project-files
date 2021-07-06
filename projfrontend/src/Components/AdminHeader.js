@@ -32,9 +32,9 @@ const AdminHeader = ({ history }) => {
           <ul className="navbar-nav mb-2 mb-lg-0 center">
             <li className="nav-item">
               <Link
-                style={currentTab(history, "/user")}
+                style={currentTab(history, "/admin/product")}
                 className="nav-link"
-                to="/"
+                to="/admin/product"
               >
                 Product
               </Link>

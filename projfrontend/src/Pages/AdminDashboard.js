@@ -5,7 +5,7 @@ function AdminDashboard() {
   return (
     <div>
       <AdminHeader />
-      <h1>heyy admin</h1>
+      <h1>heyy admin </h1>
     </div>
   );
 }

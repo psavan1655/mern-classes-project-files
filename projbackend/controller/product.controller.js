@@ -155,17 +155,43 @@ exports.getProduct = (req, res) => {
 
 exports.getAllProduct = async (req, res) => {
   try {
-    const product = await Product.find();
-    if (!product) {
-      return res.status(400).json({
-        success: false,
-        err: "No product found...",
+    Product.find()
+      .populate("category")
+      .exec((err, product) => {
+        if (err) {
+          return res.status(400).json({
+            success: false,
+            err: "No product found...",
+          });
+        }
+
+        if (!product) {
+          return res.status(400).json({
+            success: false,
+            err: "No product found...",
+          });
+        }
+
+        return res.status(200).json({
+          success: true,
+          data: product,
+        });
       });
-    }
-    return res.status(200).json({
-      success: true,
-      data: product,
-    });
+
+    //   const product = await Product.populate("category").exec((err, products) => {
+    //     console.log(products);
+    //   });
+    //   console.log(product);
+    //   if (!product) {
+    //     return res.status(400).json({
+    //       success: false,
+    //       err: "No product found...",
+    //     });
+    //   }
+    //   return res.status(200).json({
+    //     success: true,
+    //     data: product,
+    //   });
   } catch (error) {
     return res.status(400).json({
       success: false,

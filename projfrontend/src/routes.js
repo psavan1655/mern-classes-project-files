@@ -13,6 +13,8 @@ import AdminDashboard from "./Pages/AdminDashboard";
 import PrivateRoutes from "./helper/PrivateRoutes";
 import UserDashboard from "./Pages/UserDashboard";
 import AdminRoutes from "./helper/AdminRoutes";
+import ProductDisplay from "./Components/Product/ProductDisplay";
+import ProductAdd from "./Components/Product/ProductAdd";
 
 const Routes = () => {
   return (
@@ -34,10 +36,12 @@ const Routes = () => {
             exact
             component={AdminDashboard}
           />
+          <AdminRoutes path="/admin/product" exact component={ProductDisplay} />
+          <AdminRoutes path="/admin/product/add" exact component={ProductAdd} />
         </Switch>
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
     </BrowserRouter>
   );
 };
